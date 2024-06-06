@@ -1,0 +1,66 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:DemoExample.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="DemoExample.Views.EditorWindow"
+        x:DataType="vm:EditorWindowViewModel"
+        WindowStartupLocation="CenterScreen"
+        Title="EditorWindow">
+    
+    <Design.DataContext>
+        <vm:EditorWindowViewModel/>
+    </Design.DataContext>
+    
+    <StackPanel>
+        <Panel>
+            <Button Content="Назад" Click="Back"/>
+            <Button Name="DeleteBtn" Content="Удалить" HorizontalAlignment="Right" Click="Delete" IsVisible="False"/>
+        </Panel>
+        
+        <StackPanel Name="EditorPanel"
+                    Orientation="Horizontal">
+            <Grid ColumnDefinitions="Auto,Auto" ShowGridLines="False">
+                <Grid.Styles>
+                    <Style Selector="TextBox">
+                        <Setter Property="MaxWidth" Value="450"/>
+                    </Style>
+                </Grid.Styles>
+                <StackPanel Grid.Column="0" Margin="10" Spacing="14">
+                    <TextBlock Name="BlockID" Text="ID"/>
+                    <TextBlock Text="Наименование"/>
+                    <TextBlock Text="Описание"/>
+                    <TextBlock Text="Цена"/>
+                    <TextBlock Text="Наличие на складе"/>
+                    <TextBlock Text="Производитель"/>
+                </StackPanel>
+            
+                <StackPanel Grid.Column="1" >
+                    <TextBox Name="BoxID" Text="{Binding Product.Id}" IsReadOnly="True"/>
+                    <TextBox Text="{Binding Product.Name}"/>
+                    <TextBox AcceptsReturn="True" Text="{Binding Product.Description}"/>
+                    <TextBox Text="{Binding Product.Price}"/>
+                    <TextBox Text="{Binding Product.StockQuantity}"/>
+                    <ComboBox 
+                        ItemsSource="{Binding Manufacturers}"
+                        SelectedItem="{Binding SelectedManufacturer}"/>
+                </StackPanel>
+            </Grid>
+            <StackPanel Spacing="10">
+                <Image Name="ProductImage" Source="{Binding Product.Image}" Width="300" Height="200" 
+                       HorizontalAlignment="Right"/>
+                <TextBlock Name="ImageLog" TextWrapping="Wrap" HorizontalAlignment="Right"/>
+                <Button Content="Выбрать изображение" HorizontalAlignment="Right" Click="PickImage"/>
+            </StackPanel>
+        </StackPanel>
+        
+        <StackPanel Margin="0 50 0 0" >
+            <TextBlock Text="{Binding Info}" HorizontalAlignment="Center"/>
+            <Button Content="Сохранить" Command="{Binding SaveCommand}" 
+                    HorizontalAlignment="Center"/>
+        </StackPanel>
+        
+        
+    </StackPanel>
+</Window>

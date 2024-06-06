@@ -1,0 +1,97 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:DemoExample.ViewModels"
+        xmlns:conv="using:DemoExample.Converters"
+        mc:Ignorable="d" Width="1000" Height="650"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        x:Class="DemoExample.Views.ProductsWindow"
+        x:DataType="vm:ProductsWindowViewModel"
+        Title="ProductsWindow">
+    
+    <Window.Resources>
+        <conv:QuantityBackgroundConverter x:Key="QuantityBackgroundConverter" />
+    </Window.Resources>
+    
+    <Design.DataContext>
+        <vm:ProductsWindowViewModel/>
+    </Design.DataContext>
+    
+    <StackPanel>
+        
+        <Panel>
+            <StackPanel Name="AdminPanel" Orientation="Horizontal" Spacing="10" IsVisible="False"
+                        Margin="20 20 20 0">
+                <Button Content="Добавить товар" Click="CreateProduct"/>
+            </StackPanel>
+            
+            <StackPanel HorizontalAlignment="Center"
+                        Margin="0 32 0 0" Orientation="Horizontal"
+                        Spacing="10">
+                <TextBox Watermark="Поиск" MinWidth="250" MaxWidth="350" MaxHeight="25" Text="{Binding SearchText}"/>
+                <TextBlock VerticalAlignment="Center" 
+                           Text="{Binding ListProducts.Count, StringFormat='Найдено: {0}'}"/>
+            </StackPanel>
+            
+            <StackPanel HorizontalAlignment="Right" 
+                        Margin="20 10" Spacing="10">
+                <TextBlock Name="UserLoginBox"/>
+                <Button HorizontalAlignment="Center" Content="Выход" Click="Exit"/>
+            </StackPanel>
+        </Panel>
+        
+        <Panel Margin="30 0">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <ComboBox ItemsSource="{Binding Sorting}"
+                          SelectedItem="{Binding SelectedSort}"/>
+                <ComboBox ItemsSource="{Binding Manufacturers}"
+                          SelectedItem="{Binding SelectedManufacturer}"/>    
+            </StackPanel>
+            
+            <Button HorizontalAlignment="Center" Content="Добавить в корзину" Click="AddCart_OnClick"/>
+            <Button HorizontalAlignment="Right" Content="Корзина" Click="CartShow_OnClick"/>
+            
+        </Panel>
+        
+        <ListBox Name="ProductsList" 
+            Margin="30 10" MaxHeight="520" 
+            ItemsSource="{Binding ListProducts}"
+                 >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="Auto,Auto,Auto" ShowGridLines="False"
+                          DoubleTapped="EditProduct_Tapped" Tag="{Binding Id}"
+                          Background="{Binding StockQuantity, Converter={StaticResource QuantityBackgroundConverter}}">
+                        
+                        <Image Grid.Column="0" 
+                               Width="200" Height="100"
+                               Source="{Binding Image}"/>
+                        
+                        <Border Grid.Column="1" Width="570" BorderThickness="1" BorderBrush="Black"
+                                Margin="0 0 5 0">
+                            <StackPanel Margin="5 0" Spacing="10">
+                                <TextBlock FontWeight="SemiBold" Text="{Binding Name}"/>
+                                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" Text="{Binding Description}" MaxWidth="550"/>
+                                <TextBlock Text="{Binding Manufacturer.Name, StringFormat='Производитель: {0}'}"/>
+                                <TextBlock Text="{Binding Price, StringFormat='Цена: {0:c0}'}"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Grid.Column="2" BorderThickness="1" 
+                                BorderBrush="Black" MinWidth="130" MaxWidth="140">
+                            <DockPanel Margin="5">
+                                <TextBlock TextAlignment="End" TextWrapping="Wrap" Text="{Binding StockQuantity, StringFormat='На складе: {0} шт.'}"/>
+                            </DockPanel>
+                        </Border>
+                        
+                    </Grid>
+                    
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+    </StackPanel>
+    
+</Window>
